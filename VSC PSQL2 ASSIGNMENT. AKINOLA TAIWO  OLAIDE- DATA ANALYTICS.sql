@@ -679,7 +679,7 @@ WITH
             
             
 
-        ELECT 
+        SELECT 
     team,
     total_goal_difference
 FROM (
@@ -780,7 +780,7 @@ ORDER BY total_goal_difference DESC;
             
             
 
-        SSELECT 
+        SELECT 
 	team,
 	total_points
 
