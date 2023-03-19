@@ -679,15 +679,34 @@ WITH
             
             
 
-        SELECT 
-            team,
-            SUM(goals_difference) AS highest_lowestgamelost
+        ELECT 
+    team,
+    total_goal_difference
+FROM (
+    SELECT 
+        team,
+        SUM(goals_difference) AS total_goal_difference
+    FROM total_world_cup
+    GROUP BY team
+) AS t
+WHERE 
+    total_goal_difference = (
+        SELECT MAX(tgd)
+        FROM (
+            SELECT SUM(goals_difference) AS tgd
             FROM total_world_cup
-            GROUP BY
-                team
-            ORDER BY
-            SUM(goals_difference)
-            DESC;
+            GROUP BY team
+        ) AS t
+    )
+    OR total_goal_difference = (
+        SELECT MIN(tgd)
+        FROM (
+            SELECT SUM(goals_difference) AS tgd
+            FROM total_world_cup
+            GROUP BY team
+        ) AS t
+    )
+ORDER BY total_goal_difference DESC;
 
             --Q10 Country with highest and lowest points?
 
@@ -761,16 +780,29 @@ WITH
             
             
 
-        SELECT 
-            team,
-            SUM(points) AS highest_lowestgamelost
-            FROM total_world_cup
-            GROUP BY
-                team
-            ORDER BY
-            SUM(points)
-            DESC;
+        SSELECT 
+	team,
+	total_points
 
+	FROM ( SELECT 
+	           team,
+		   SUM(points) AS total_points
+		   FROM total_world_cup
+                   GROUP BY team
+                ) AS t
+	WHERE 
+		total_points = (SELECT MAX(pts)
+                        FROM ( SELECT SUM(points) AS pts
+					FROM total_world_cup
+					GROUP BY team ) AS t
+                                 )
+				   OR total_points = ( 
+                                    SELECT MIN(pts)
+                                     FROM ( SELECT SUM(points) AS pts
+					FROM total_world_cup
+					GROUP BY team ) AS t
+                                       )
+             ORDER BY total_points DESC;
  
 
 
