@@ -115,7 +115,7 @@ WITH
             SUM(goals_against) AS total_goals_against
             FROM total_world_cup
 
-            --Q3, Country with highest and lowest in the last five years?
+            --Q3, Country with highest and lowest appearance in the last five years?
 
             
             WITH
@@ -187,15 +187,29 @@ WITH
             fifa_2018 )
             
             
-        SELECT 
-            team,
-            COUNT(team) AS team_appearance
-            FROM total_world_cup
-            GROUP BY
-                team
-            ORDER BY
-            COUNT(team)
-            DESC;
+        
+SELECT 
+	team,
+	total_appearance
+	FROM ( SELECT 
+	           team,
+		   COUNT(team) AS total_appearance
+		   FROM total_world_cup
+                   GROUP BY team
+                ) AS t
+	WHERE 
+		total_appearance = (SELECT MAX(ta)
+                        FROM ( SELECT COUNT(team) AS ta
+					FROM total_world_cup
+					GROUP BY team ) AS t
+                                 )
+				   OR total_appearance = ( 
+                                    SELECT MIN (ta)
+                                     FROM ( SELECT COUNT(team) AS ta
+					FROM total_world_cup
+					GROUP BY team ) AS t
+                                       )
+             ORDER BY total_appearance DESC;
         
 
         --Q4 Country with highest and lowest games played?
@@ -270,14 +284,27 @@ WITH
             
             
         SELECT 
-            team,
-            SUM(games_played) AS team_appearance
-            FROM total_world_cup
-            GROUP BY
-                team
-            ORDER BY
-            SUM(games_played)
-            DESC;
+	team,
+	total_games_played
+	FROM ( SELECT 
+	           team,
+		   SUM(games_played) AS total_games_played
+		   FROM total_world_cup
+                   GROUP BY team
+                ) AS t
+	WHERE 
+		total_games_played = (SELECT MAX(tgp)
+                        FROM ( SELECT SUM(games_played) AS tgp
+					FROM total_world_cup
+					GROUP BY team ) AS t
+                                 )
+				   OR total_games_played = ( 
+                                    SELECT MIN (tgp)
+                                     FROM ( SELECT SUM(games_played) AS tgp
+					FROM total_world_cup
+					GROUP BY team ) AS t
+                                       )
+             ORDER BY total_games_played DESC;
         
         --Q5, Country with highest and lowest games won?
         
@@ -351,14 +378,27 @@ WITH
             
             
         SELECT 
-            team,
-            SUM(win) AS highest_lowestgamewon
-            FROM total_world_cup
-            GROUP BY
-                team
-            ORDER BY
-            SUM(win)
-            DESC;
+	team,
+	total_win
+	FROM ( SELECT 
+	           team,
+		   SUM(win) AS total_win
+		   FROM total_world_cup
+                   GROUP BY team
+                ) AS t
+	WHERE 
+		total_win = (SELECT MAX(tw)
+                        FROM ( SELECT SUM(win) AS tw
+					FROM total_world_cup
+					GROUP BY team ) AS t
+                                 )
+				   OR total_win = ( 
+                                    SELECT MIN ( tw)
+                                     FROM ( SELECT SUM(win) AS tw
+					FROM total_world_cup
+					GROUP BY team ) AS t
+                                       )
+             ORDER BY total_win DESC;
             
             ---Q6 Country with highest and lowest games lost?
             WITH
@@ -432,14 +472,27 @@ WITH
             
 
         SELECT 
-            team,
-            SUM(loss) AS highest_lowestgamelost
-            FROM total_world_cup
-            GROUP BY
-                team
-            ORDER BY
-            SUM(loss)
-            DESC;
+	team,
+	total_loss
+	FROM ( SELECT 
+	           team,
+		   SUM(loss) AS total_loss
+		   FROM total_world_cup
+                   GROUP BY team
+                ) AS t
+	WHERE 
+		total_loss = (SELECT MAX(tl)
+                        FROM ( SELECT SUM(loss) AS tl
+					FROM total_world_cup
+					GROUP BY team ) AS t
+                                 )
+				   OR total_loss = ( 
+                                    SELECT MIN ( tl)
+                                     FROM ( SELECT SUM(loss) AS tl
+					FROM total_world_cup
+					GROUP BY team ) AS t
+                                       )
+             ORDER BY total_loss ASC;
 
         --Q7 Country with highest and lowest goals for?
         WITH
@@ -512,15 +565,29 @@ WITH
             
             
 
-        SELECT 
-            team,
-            SUM(goals_for) AS highest_lowestgamelost
-            FROM total_world_cup
-            GROUP BY
-                team
-            ORDER BY
-            SUM(goals_for)
-            DESC;
+       
+    SELECT 
+	team,
+	total_goals_for
+	FROM ( SELECT 
+	           team,
+		   SUM(goals_for) AS total_goals_for
+		   FROM total_world_cup
+                   GROUP BY team
+                ) AS t
+	WHERE 
+		total_goals_for = (SELECT MAX(tgf)
+                        FROM ( SELECT SUM(goals_for) AS tgf
+					FROM total_world_cup
+					GROUP BY team ) AS t
+                                 )
+				   OR total_goals_for = ( 
+                                    SELECT MIN ( tgf)
+                                     FROM ( SELECT SUM(goals_for) AS tgf
+					FROM total_world_cup
+					GROUP BY team ) AS t
+                                       )
+             ORDER BY total_goals_for DESC;
 
         --Q8, Country with highest and lowest goals against?
         WITH
